@@ -22,7 +22,7 @@
 
 using namespace std;
 
-const int NUMBER_OF_SIDES = 6;
+#define NUMBER_OF_SIDES 6
 const string one = " _______\n|       |\n|   o   |\n|       |\n'-------'\n";
 const string two = " _______\n|       |\n| o   o |\n|       |\n'-------'\n";
 const string three = " _______\n| o     |\n|   o   |\n|     o |\n'-------'\n";

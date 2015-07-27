@@ -67,6 +67,64 @@ void print_two_probabilities() {
 	cout << endl;
 }
 
+double probability_of_better_one(int r) {
+	double one_die[] = {1/6., 1/6., 1/6., 1/6., 1/6., 1/6.};
+	double sum = 0;
+	for (--r;r<6; r++) {
+		sum += one_die[r];
+	}
+	return sum;
+}
+void print_two_die_varing_PP() {
+	int die1_by_die2_by_rerollmin[6][6][6];
+	int count[12];
+	for (double pp = .48; pp <= .52; pp+=.01) {
+		//for each PP
+		// prob of any individual element in array is 1/6^3
+		// values between 2 and 12 inclusive
+		for (int die1 = 0; die1 < 6; die1++) {
+			for (int die2 = 0; die2 < 6; die2++) {
+				for (int rerollmin = 0; rerollmin < 6; rerollmin++) {
+					if (pp <= probability_of_better_one(min((die1+1), (die2+1))))
+						die1_by_die2_by_rerollmin[die1][die2][rerollmin] = max((die1+1), (die2+1)) + (rerollmin+1);
+					else 
+						die1_by_die2_by_rerollmin[die1][die2][rerollmin] = (die1+1) + (die2+1);
+				}
+			}
+		}
+
+		for (int i = 0; i<12; i++)
+			count[i] = 0;
+		for (int die1 = 0; die1 < 6; die1++) {
+			for (int die2 = 0; die2 < 6; die2++) {
+				for (int rerollmin = 0; rerollmin < 6; rerollmin++)
+					count[ die1_by_die2_by_rerollmin[die1][die2][rerollmin]-1]++;
+			}
+		}
+		/*
+		for (int rerollmin = 0; rerollmin < 6; rerollmin++) {
+			for (int die1 = 0; die1 < 6; die1++) {
+				for (int die2 = 0; die2 < 6; die2++) {
+					printf("%2d ",die1_by_die2_by_rerollmin[die1][die2][rerollmin]);
+				}
+				cout << endl;
+			}
+			cout << endl;
+		}*/
+
+
+		cout << "pp_equals_" << (int) (pp * 100 + .01) << " = [" << endl;
+		for (int i = 0; i<12; i++)
+			printf("%lf,\n", double(count[i])/(6*6*6));
+		cout << "]" << endl << endl;
+	}
+
+
+	for (int i = 1; i<=6; i++) {
+		cout << i << " " << probability_of_better_one(i) << endl;
+ 	}
+}
+
 void tabled_two_die() {
 	int die1_by_die2_by_rerollmin[6][6][6];
 	// prob of any individual element in array is 1/6^3
@@ -130,8 +188,9 @@ int main() {
 	srand(time(NULL));
 
 	//cout << analyze_one()->number_to_pursue << endl;
-	tabled_two_die();
+	//tabled_two_die();
 
-	print_two_probabilities();
+	//print_two_probabilities();
+	print_two_die_varing_PP();
 
  }

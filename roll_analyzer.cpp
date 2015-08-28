@@ -14,56 +14,199 @@
  */
 
 #include <iostream>
+#include <cmath>
+#include <algorithm>
+#include <cstring>
 #define PURSUE_PERCENT .50
 
 using namespace std;
+
 #define NUMBER_OF_SIDES 6
-int one_die_values[NUMBER_OF_SIDES];
-int two_die_values[NUMBER_OF_SIDES*2];
-int three_die_values[NUMBER_OF_SIDES*3];
-int four_die_values[NUMBER_OF_SIDES*4];
-int five_die_values[NUMBER_OF_SIDES*5];
-int six_die_values[NUMBER_OF_SIDES*6];
+double one_die_prob[NUMBER_OF_SIDES];
+double two_die_prob[NUMBER_OF_SIDES*2];
+double three_die_prob[NUMBER_OF_SIDES*3];
+double four_die_prob[NUMBER_OF_SIDES*4];
+double five_die_prob[NUMBER_OF_SIDES*5];
+double six_die_prob[NUMBER_OF_SIDES*6];
 
 int roll() {
     return rand() % NUMBER_OF_SIDES + 1;
 }
-void set_one_die_values() {
+void set_table_values() {
+    int one_die_values[NUMBER_OF_SIDES];
+    int two_die_values[NUMBER_OF_SIDES*2];
+    int three_die_values[NUMBER_OF_SIDES*3];
+    int four_die_values[NUMBER_OF_SIDES*4];
+    int five_die_values[NUMBER_OF_SIDES*5];
+    int six_die_values[NUMBER_OF_SIDES*6];
+
     for (int i = 0; i<NUMBER_OF_SIDES; i++)
         one_die_values[i] = 0;
     for (int i = 0; i<NUMBER_OF_SIDES; i++)
         one_die_values[i]++;
-}
-void set_two_die_values() {
+    for (int i = 0; i<NUMBER_OF_SIDES; i++)
+        one_die_prob[i] = (double)one_die_values[i]/pow((double) 6,1);
+
     for (int i = 0; i<NUMBER_OF_SIDES*2; i++)
         two_die_values[i] = 0;
     for (int i = 0; i<NUMBER_OF_SIDES; i++) {
-        for (int j = 0; j<NUMBER_OF_SIDES; j++)
-            two_die_values[i+j+1]++;
-    }
-}
-void set_three_die_values() {
-    for (int i = 0; i<NUMBER_OF_SIDES*3; i++)
-        three_die_values[i] = 0;
-    for (int i = 0; i<NUMBER_OF_SIDES; i++) {
         for (int j = 0; j<NUMBER_OF_SIDES; j++) {
-            for (int k = 0; k<NUMBER_OF_SIDES; k++)
-                three_die_values[i+j+k+2]++;
+            for (int k = one_die_values[i]; k > 0; k--)
+                two_die_values[i+j+1]++;
         }
     }
-}
-void generate_value_tables(){
-    set_one_die_values();
-    set_two_die_values();
-    set_three_die_values();
+    for (int i = 0; i<NUMBER_OF_SIDES*2; i++)
+        two_die_prob[i] = (double)two_die_values[i]/pow((double) 6,2);
+
+    for (int i = 0; i<NUMBER_OF_SIDES*3; i++)
+        three_die_values[i] = 0;
+    for (int i = 0; i<NUMBER_OF_SIDES*2; i++) {
+        for (int j = 0; j<NUMBER_OF_SIDES; j++) {
+            for (int k = two_die_values[i]; k > 0; k--)
+                three_die_values[i+j+1]++;
+        }
+    }
+    for (int i = 0; i<NUMBER_OF_SIDES*3; i++)
+        three_die_prob[i] = (double)three_die_values[i]/pow((double) 6,3);
+
+    for (int i = 0; i<NUMBER_OF_SIDES*4; i++)
+        four_die_values[i] = 0;
+    for (int i = 0; i<NUMBER_OF_SIDES*3; i++) {
+        for (int j = 0; j<NUMBER_OF_SIDES; j++) {
+            for (int k = three_die_values[i]; k > 0; k--)
+                four_die_values[i+j+1]++;
+        }
+    }
+    for (int i = 0; i<NUMBER_OF_SIDES*4; i++)
+        four_die_prob[i] = (double)four_die_values[i]/pow((double) 6,4);
+
+    for (int i = 0; i<NUMBER_OF_SIDES*5; i++)
+        five_die_values[i] = 0;
+    for (int i = 0; i<NUMBER_OF_SIDES*4; i++) {
+        for (int j = 0; j<NUMBER_OF_SIDES; j++) {
+            for (int k = four_die_values[i]; k > 0; k--)
+                five_die_values[i+j+1]++;
+        }
+    }
+    for (int i = 0; i<NUMBER_OF_SIDES*5; i++)
+        five_die_prob[i] = (double)five_die_values[i]/pow((double) 6,5);
+
+
+    for (int i = 0; i<NUMBER_OF_SIDES*6; i++)
+        six_die_values[i] = 0;
+    for (int i = 0; i<NUMBER_OF_SIDES*5; i++) {
+        for (int j = 0; j<NUMBER_OF_SIDES; j++) {
+            for (int k = five_die_values[i]; k > 0; k--)
+                six_die_values[i+j+1]++;
+        }
+    }
+    for (int i = 0; i<NUMBER_OF_SIDES*6; i++)
+        six_die_prob[i] = (double)six_die_values[i]/pow((double) 6,6);
+
 }
 void print_value_tables(){
     for (int i = 0; i<NUMBER_OF_SIDES; i++)
-        cout << i+1 << ": " << one_die_values[i] << endl;
+        cout << i+1 << ": " << one_die_prob[i] << endl;
     for (int i = 0; i<NUMBER_OF_SIDES*2; i++)
-        cout << i+1 << ": " << two_die_values[i] << endl;
+        cout << i+1 << ": " << two_die_prob[i] << endl;
     for (int i = 0; i<NUMBER_OF_SIDES*3; i++)
-        cout << i+1 << ": " << three_die_values[i] << endl;
+        cout << i+1 << ": " << three_die_prob[i] << endl;
+    for (int i = 0; i<NUMBER_OF_SIDES*4; i++)
+        cout << i+1 << ": " << four_die_prob[i] << endl;
+    for (int i = 0; i<NUMBER_OF_SIDES*5; i++)
+        cout << i+1 << ": " << five_die_prob[i] << endl;
+    for (int i = 0; i<NUMBER_OF_SIDES*6; i++) {
+        cout << i+1 << ": " << six_die_prob[i] << endl;
+    }
+}
+void print_six_value_lists() {
+    cout << "no_reroll_6 = [" << endl;
+    for (int i = 0; i<NUMBER_OF_SIDES*6; i++) {
+        cout << six_die_prob[i] << "," << endl;
+    }
+    cout << "]" << endl;
+    cout << "no_reroll_5 = [" << endl;
+    for (int i = 0; i<NUMBER_OF_SIDES*5; i++) {
+        cout << five_die_prob[i] << "," << endl;
+    }
+    cout << "]" << endl;
+    cout << "no_reroll_4 = [" << endl;
+    for (int i = 0; i<NUMBER_OF_SIDES*4; i++) {
+        cout << four_die_prob[i] << "," << endl;
+    }
+    cout << "]" << endl;
+    cout << "no_reroll_3 = [" << endl;
+    for (int i = 0; i<NUMBER_OF_SIDES*3; i++) {
+        cout << three_die_prob[i] << "," << endl;
+    }
+    cout << "]" << endl;
+    cout << "no_reroll_2 = [" << endl;
+    for (int i = 0; i<NUMBER_OF_SIDES*2; i++) {
+        cout << two_die_prob[i] << "," << endl;
+    }
+    cout << "]" << endl;
+    cout << "no_reroll_1 = [" << endl;
+    for (int i = 0; i<NUMBER_OF_SIDES*1; i++) {
+        cout << one_die_prob[i] << "," << endl;
+    }
+    cout << "]" << endl;
+}
+int sum_array(int * start, int size) {
+    int sum = 0;
+    for (int i = 0; i<size; i++)
+        sum += start[i];
+    return sum;
+}
+int get_max(int * start, int size) {
+    int max = 0;
+    for (int i = 0; i<size; i++) {
+        if (start[i] > max)
+            max = start[i];
+    }
+    return max; 
+}
+void set_rolls(int * start, int size) {
+    for (int i = 0; i<size; i++)
+        start[i] = roll();
+}
+void simulate_with_rerolls_6() {
+    int one_roll[36] = {0};
+    int every_reroll[36] = {0};
+    double cases = 1e9;
+    for (int i = 0; i<cases; i++) {
+        int rolls[6];
+        set_rolls(rolls, 6);
+        one_roll[sum_array(rolls, 6) - 1]++;
+        //reroll and take max
+        for (int j = 0; j<6; j++) {
+            rolls[j] = get_max(rolls+j, 6-j);
+            set_rolls(rolls+j+1, 5-j);
+        }
+        every_reroll[sum_array(rolls, 6) - 1]++;
+    }
+    cout << "#these are simulated probabilities based on " << cases;
+    cout << " test cases" << endl;
+    cout << "one_roll_6 = [" << endl;
+    for (int i = 0; i<36; i++) {
+        cout << double(one_roll[i])/cases << "," << endl;
+    }
+    cout << "]" << endl;
+
+    cout << "every_reroll_6 = [" << endl;
+    for (int i = 0; i<36; i++) {
+        cout << double(every_reroll[i])/cases << "," << endl;
+    }
+    cout << "]" << endl;
+
+}
+
+
+
+bool wayToSort(int i, int j) { return i > j; }
+void analyze_roll(int rolls[], int size){
+    sort(rolls, rolls+size, wayToSort);
+    for (int i = 0; i<size; i++)
+        cout << rolls[i] << endl;
 }
 
 struct bestChoice {
@@ -91,23 +234,6 @@ bestChoice * analyze_one() {
     }
     cout << "found best number associated with the highest likely hood" << endl;
     return toReturn;
-}
-
-void print_two_probabilities() {
-    int toPrint[12];
-    for (int i = 0; i<12; i++)
-        toPrint[i] = 0;
-    for (int i = 0; i<6; i++) {
-        for (int j = 0; j<6; j++) {
-            toPrint[(i+1)+(j+1)-1]++;
-        }
-    }
-    float total = 0;
-    for (int i = 0; i<12; i++)
-        total += toPrint[i];
-    for (int i = 0; i<12; i++) 
-        cout << i+1 << ": " << toPrint[i] / total << endl;
-    cout << endl;
 }
 
 double probability_of_better_one(int r) {
@@ -229,12 +355,14 @@ void tabled_two_die() {
 
 int main() {
     srand(time(NULL));
+    //set_table_values();
 
     //cout << analyze_one()->number_to_pursue << endl;
     //tabled_two_die();
 
     //print_two_probabilities();
     //print_two_die_varing_PP();
-    generate_value_tables();
-    print_value_tables();
+    //print_value_tables();
+    //print_six_value_lists();
+    simulate_with_rerolls_6();
 }

@@ -87,17 +87,15 @@ int handlePlayerResponse() {
     string input;
     cin >> input;
     int inputNum;
-    try {
-        inputNum = atoi(input.c_str());
-    }
-    catch (int e) {
-        for (int i = 0; i<input.length(); i++)
-            input[i] = tolower(input[i]);
-        if (input.compare("roll") == 0)
-            return 0;
-        else 
-            return -1;
-    }
+    for (int i = 0; i<input.length(); i++)
+        input[i] = tolower(input[i]);
+    if (input.compare("roll") == 0)
+        return 0;
+    else if (input.compare("cheat") == 0)
+        return NUMBER_OF_SIDES + 1;
+    //inproper inputs will resut in "undefined behavior"
+    // usualy 0's
+    inputNum = atoi(input.c_str());
     return inputNum;
 }
 
@@ -118,7 +116,13 @@ int playerTurn() {
         int toTake, taken = 0;
         while(1) {
             toTake = handlePlayerResponse();
-            if (toTake == 0 && taken != 0) {
+            if (toTake == NUMBER_OF_SIDES+1) {
+                savedRolls[0]=1; 
+                savedRolls[3]=1; 
+                savedRolls[5]=4; 
+                goto endRolling;
+            }
+            else if (toTake == 0 && taken != 0) {
                 break;
             }
             else if (toTake != 0 && currentRoll[toTake-1] != 0 &&
@@ -136,6 +140,7 @@ int playerTurn() {
                 cout << "Invalid number to take, please pick again" << endl;
         }
     }
+endRolling:
     cout << "Your final set of dice are" << endl;
     showRolls(savedRolls);
     cout << "Your final score is ";
@@ -171,8 +176,8 @@ playagain:
         scores[i] = playerTurn();
     }
 
-//    for (int i = 0; i<players-1; i+=2)
-//        scores[i] = 24;
+    //    for (int i = 0; i<players-1; i+=2)
+    //        scores[i] = 24;
 
     int max = -1, ties = 0;
     int maxIndex[players];

@@ -199,8 +199,8 @@ playagain:
     else {
         cout << "There is a draw between players ";
         for (int i = 0; i<=ties; i++) {
-            cout << " " << maxIndex[i]+1;
-            playerID[i] = maxIndex[i]+1;
+            cout << " " << playerID[maxIndex[i]];
+            playerID[i] = playerID[maxIndex[i]];
             if (i + 1 <= ties)
                 cout << " and";
         }

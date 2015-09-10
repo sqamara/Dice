@@ -200,6 +200,80 @@ void simulate_with_rerolls_6() {
 
 }
 
+/* function that simulates the probabilities of each value after rolling all
+ * six dice */
+
+void all_possible_outcomes() {
+    int six_dice[6][6][6][6][6][6];
+
+    int count = 0, histogram[36];
+    memset(histogram, 0, 36*4);
+    for (int o = 0; o<6; o++) {
+        for (int tw = 0; tw<6; tw++) {
+            for (int th = 0; th<6; th++) {
+                for (int fo = 0; fo<6; fo++) {
+                    for (int fi = 0; fi<6; fi++) {
+                        for (int s = 0; s<6; s++) {
+                            count++;
+                            histogram[6+o+tw+th+fo+fi+s-1]++;
+                        }}}}}}
+    cout << count << endl;
+    for (int i = 0; i<36; i++)
+        cout << i+1 << ": " << (double) histogram[i]/count << endl;
+
+    for (int o = 0; o<6; o++) {
+        for (int tw = 0; tw<6; tw++) {
+            for (int th = 0; th<6; th++) {
+                for (int fo = 0; fo<6; fo++) {
+                    for (int fi = 0; fi<6; fi++) {
+                        for (int s = 0; s<6; s++) {
+                            six_dice[o][tw][th][fo][fi][s] = 6;
+                            int dice[] = {o, tw, th, fo, fi, s};
+                            for (int i = 0; i<6; i++)
+                                six_dice[o][tw][th][fo][fi][s] += get_max(dice+i, 6-i);
+                        }}}}}}
+
+//    count = 0;
+//    memset(histogram, 0, 36*4);
+//    for (int o = 0; o<6; o++) {
+//        for (int tw = 0; tw<6; tw++) {
+//            for (int th = 0; th<6; th++) {
+//                for (int fo = 0; fo<6; fo++) {
+//                    for (int fi = 0; fi<6; fi++) {
+//                        for (int s = 0; s<6; s++) {
+//                            count++;
+//                            histogram[six_dice[o][tw][th][fo][fi][s]-1]++;
+//                        }}}}}}
+//    cout << count << endl;
+//    cout << "confusing = [" << endl;
+//    for (int i = 0; i<36; i++)
+//        cout << (double) histogram[i]/count << "," << endl;
+//    cout << "]" << endl;
+//
+//
+//    int two[6][6], h[12];
+//    memset(h, 0, 12*4);
+//    for (int o = 0; o<6; o++) {
+//        for (int tw = 0; tw <6; tw++) {
+//            two[o][tw] = 2;
+//            int d[] = {o, tw};
+//            for (int i = 0; i<2; i++)
+//                two[o][tw] += get_max(d+i, 2-i);
+//            h[two[o][tw]-1]++;
+//        }
+//    }
+//    for (int i = 0; i<12; i++)
+//        cout << (double) h[i]/36 << "," << endl;
+//    cout << "]" << endl;
+
+
+
+
+}
+
+
+
+
 
 
 bool wayToSort(int i, int j) { return i > j; }
@@ -364,5 +438,7 @@ int main() {
     //print_two_die_varing_PP();
     //print_value_tables();
     //print_six_value_lists();
-    simulate_with_rerolls_6();
+    //simulate_with_rerolls_6();
+
+    all_possible_outcomes();
 }
